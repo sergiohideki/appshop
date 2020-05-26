@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/product_grid.dart';
+import '../widgets/badge.dart';
+import '../providers/cart.dart';
 
 enum FilterOptions {
   Favorite,
@@ -18,9 +21,7 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text('Minha Loja'),
-        ),
+        title: Text('Minha Loja'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
@@ -43,6 +44,15 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
                 value: FilterOptions.All,
               ),
             ],
+          ),
+          Consumer<Cart>(
+            builder: (ctx, cart, _) => Badge(
+              value: cart.itemCount.toString(),
+              child: IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {},
+              ),
+            ),
           )
         ],
       ),
