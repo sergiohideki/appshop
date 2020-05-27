@@ -36,6 +36,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   void _saveForm() {
+    var isValid = _form.currentState.validate();
+
+    if (!isValid) {
+      return;
+    }
+
     _form.currentState.save();
 
     final newProduct = Product(
@@ -72,6 +78,16 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
                 onSaved: (value) => _formData['title'] = value,
+                validator: (value) {
+                  if(value.trim().isEmpty){
+                  return 'Informe um titulo valido!';
+                  }
+
+                  if(value.trim().length <= 3){
+                  return 'Informe um titulo com no mínimo 3 letras!';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
