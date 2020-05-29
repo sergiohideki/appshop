@@ -19,10 +19,10 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  void addProduct(Product newProduct) {
+  Future<void> addProduct(Product newProduct) {
     const url = 'https://flutter-cod3r-3940c.firebaseio.com/products.json';
 
-    http
+    return http
         .post(
       url,
       body: json.encode({
