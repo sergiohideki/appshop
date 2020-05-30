@@ -13,6 +13,10 @@ class OrdersScreen extends StatefulWidget {
 class _OrdersScreenState extends State<OrdersScreen> {
   bool _isLoading = true;
 
+  Future<void> _refreshOrders(BuildContext context){
+    return Provider.of<Orders>(context, listen: false).loadOrders();
+  }
+
   @override
   void initState() {
     Provider.of<Orders>(context, listen: false).loadOrders().then((_) {
@@ -34,9 +38,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: orders.itemsCount,
-              itemBuilder: (ctx, i) => OrderWidget(orders.items[i]),
+          : RefreshIndicator(
+            onRefresh: ()=> _refreshOrders(context),
+              child: ListView.builder(
+                itemCount: orders.itemsCount,
+                itemBuilder: (ctx, i) => OrderWidget(orders.items[i]),
+              ),
             ),
     );
   }
