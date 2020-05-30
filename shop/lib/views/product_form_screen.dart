@@ -52,11 +52,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   bool isValidImageUrl(String url) {
-    final pattern = RegExp('/\.jpg|.png|\jpeg/g');
-    bool startWithHttp = url.toLowerCase().startsWith('http://');
-    bool startWithHttps = url.toLowerCase().startsWith('https://');
-    bool endsWithAllTypes = pattern.hasMatch(url);
-    return (startWithHttp || startWithHttps) && (endsWithAllTypes);
+    final patternDomain = RegExp('^(http|https)://');
+    final patternImage = RegExp('/\.jpg|.png|\jpeg/g');
+    bool startWithDomainType = patternDomain.hasMatch(url);
+    bool endsWithImageType = patternImage.hasMatch(url);
+    return startWithDomainType && endsWithImageType;
   }
 
   @override
@@ -87,35 +87,31 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     });
 
     final products = Provider.of<Products>(context, listen: false);
-    if (_formData['id'] == null) {
-      try {
+    try {
+      if (_formData['id'] == null) {
         await products.addProduct(product);
-        Navigator.of(context).pop();
-      } catch (error) {
-        await showDialog<Null>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text('Ocorreu um erro!'),
-            content: Text('Ocorreu um erro ao salvar o produto!'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Fechar'),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
+      } else {
+        await products.updateProduct(product);
       }
-    } else {
-      products.updateProduct(product);
-      setState(() {
-        _isLoading = true;
-      });
       Navigator.of(context).pop();
+    } catch (error) {
+      await showDialog<Null>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Ocorreu um erro!'),
+          content: Text('Ocorreu um erro ao salvar o produto!'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Fechar'),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
