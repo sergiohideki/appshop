@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../providers/products.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/badge.dart';
 import '../widgets/app_drawer.dart';
@@ -18,6 +19,13 @@ class ProductOverViewScreen extends StatefulWidget {
 
 class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
   bool _showFavoriteOnly = false;
+
+  @override
+  void initState() {
+    super.initState();
+    //carregar os produtos
+    Provider.of<Products>(context, listen: false).loadProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
