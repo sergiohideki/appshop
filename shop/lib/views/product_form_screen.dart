@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,14 +52,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   }
 
   bool isValidImageUrl(String url) {
+    final pattern = RegExp('/\.jpg|.png|\jpeg/g');
     bool startWithHttp = url.toLowerCase().startsWith('http://');
     bool startWithHttps = url.toLowerCase().startsWith('https://');
-    bool endsWithPng = url.toLowerCase().endsWith('.png');
-    bool endsWithJpg = url.toLowerCase().endsWith('.jpg');
-    bool endsWithJpeg = url.toLowerCase().endsWith('.jpeg');
-    return (startWithHttp || startWithHttps) && (endsWithPng) ||
-        (endsWithJpg) ||
-        (endsWithJpeg);
+    bool endsWithAllTypes = pattern.hasMatch(url);
+    return (startWithHttp || startWithHttps) && (endsWithAllTypes);
   }
 
   @override
