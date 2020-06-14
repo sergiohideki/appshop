@@ -53,10 +53,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   bool isValidImageUrl(String url) {
     final patternDomain = RegExp('^(http|https)://');
-    final patternImage = RegExp('/\.jpg|.png|\jpeg/g');
+    // final patternImage = RegExp('/\.jpg|.png|\jpeg/g');
     bool startWithDomainType = patternDomain.hasMatch(url);
-    bool endsWithImageType = patternImage.hasMatch(url);
-    return startWithDomainType && endsWithImageType;
+    // bool endsWithImageType = patternImage.hasMatch(url);
+    return startWithDomainType;
   }
 
   @override
@@ -213,14 +213,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                               _saveForm();
                             },
                             onSaved: (value) => _formData['imageUrl'] = value,
-                            validator: (value) {
-                              bool isEmpty = value.trim().isEmpty;
-                              bool isInvalid = !isValidImageUrl(value);
+                            // validator: (value) {
+                            //   bool isEmpty = value.trim().isEmpty;
+                            //   bool isInvalid = !isValidImageUrl(value);
 
-                              if (isEmpty || isInvalid) {
-                                return 'Informe uma URL válida!';
-                              }
-                            },
+                            //   if (isEmpty || isInvalid) {
+                            //     return 'Informe uma URL válida!';
+                            //   }
+                            // },
                           ),
                         ),
                         Container(

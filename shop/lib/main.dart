@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/views/auth_screen.dart';
 
 import './utils/app_routes.dart';
 
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: ProductOverViewScreen(),
         routes: {
+          AppRoutes.AUTH: (ctx) => AuthScreen(),
           AppRoutes.HOME: (ctx) => ProductOverViewScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),

@@ -17,7 +17,7 @@ class Product with ChangeNotifier {
     @required this.title,
     @required this.description,
     @required this.price,
-    @required this.imageUrl,
+    this.imageUrl,
     this.isFavorite = false,
   });
 
