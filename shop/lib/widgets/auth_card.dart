@@ -8,6 +8,8 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
+  GlobalKey<FormState> _form = GlobalKey();
+  bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   final _passwordController = TextEditingController();
 
@@ -17,7 +19,37 @@ class _AuthCardState extends State<AuthCard> {
   };
 
   void _submit() {
+    if (!_form.currentState.validate()) {
+      return;
+    }
 
+    setState(() {
+      _isLoading = true;
+    });
+
+    _form.currentState.save();
+
+    if (_authMode == AuthMode.Login) {
+      // Login
+    } else {
+      // Registrar
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _switchAuthMode() {
+    if (_authMode == AuthMode.Login) {
+      setState(() {
+        _authMode = AuthMode.Signup;
+      });
+    } else {
+      setState(() {
+        _authMode = AuthMode.Login;
+      });
+    }
   }
 
   @override
@@ -28,10 +60,11 @@ class _AuthCardState extends State<AuthCard> {
       elevation: 8.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
-        height: 320,
+        height: _authMode == AuthMode.Login ? 290 : 318,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16),
         child: Form(
+          key: _form,
           child: Column(
             children: <Widget>[
               TextFormField(
@@ -60,7 +93,6 @@ class _AuthCardState extends State<AuthCard> {
               if (_authMode == AuthMode.Signup)
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Confirmar Senha'),
-                  controller: _passwordController,
                   obscureText: true,
                   validator: _authMode == AuthMode.Signup
                       ? (value) {
@@ -70,19 +102,28 @@ class _AuthCardState extends State<AuthCard> {
                           return null;
                         }
                       : null,
-                  onSaved: (value) => _authData['password'] = value,
                 ),
-              SizedBox(height: 20),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+              Spacer(),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  color: Theme.of(context).primaryColor,
+                  textColor: Theme.of(context).primaryTextTheme.button.color,
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                  child:
+                      Text(_authMode == AuthMode.Login ? 'LOGIN' : 'REGISTRAR'),
+                  onPressed: _submit,
                 ),
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).primaryTextTheme.button.color,
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                child:
-                    Text(_authMode == AuthMode.Login ? 'LOGIN' : 'REGISTRAR'),
-                onPressed: _submit,
+              FlatButton(
+                onPressed: _switchAuthMode,
+                child: Text(
+                  "ALTERAR PARA ${_authMode == AuthMode.Login ? 'REGISTRAR' : 'LOGIN'}",
+                ),
+                textColor: Theme.of(context).primaryColor,
               ),
             ],
           ),
