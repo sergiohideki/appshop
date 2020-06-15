@@ -34,7 +34,7 @@ class Products with ChangeNotifier {
     _items.clear();
     if (data != null) {
       data.forEach((productId, productData) {
-        final isFavorite = favMap == null ? false : favMap[productId] ?? false;
+        final isFavorite = favMap == null ? false : favMap[productId];
         _items.add(Product(
           id: productId,
           title: productData['title'],
