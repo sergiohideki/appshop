@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/exceptions/auth_exception.dart';
 import 'package:shop/providers/auth.dart';
 
 enum AuthMode { Signup, Login }
@@ -29,14 +30,38 @@ class _AuthCardState extends State<AuthCard> {
       _isLoading = true;
     });
 
+    void _showErrorDialog(String msg) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Ocorreu um erro!'),
+          content: Text(msg),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Fechar'),
+            ),
+          ],
+        ),
+      );
+    }
+
     _form.currentState.save();
 
     Auth auth = Provider.of(context, listen: false);
 
-    if (_authMode == AuthMode.Login) {
-      await auth.login(_authData["email"], _authData["password"]);
-    } else {
-      await auth.signup(_authData["email"], _authData["password"]);
+    try {
+      if (_authMode == AuthMode.Login) {
+        await auth.login(_authData["email"], _authData["password"]);
+      } else {
+        await auth.signup(_authData["email"], _authData["password"]);
+      }
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog("Ocorreu um erro inesperado!");
     }
 
     setState(() {
